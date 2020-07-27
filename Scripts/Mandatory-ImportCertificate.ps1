@@ -1,5 +1,4 @@
-
-$CertificateFolder = Join-Path -Path ($PSScriptRoot | Split-Path -Parent) -ChildPath "Config"
+$CertificateFolder = Join-Path -Path ($PSScriptRoot | Split-Path -Parent) -ChildPath "Certificates"
 $CertificateFiles = Get-ChildItem -Path $CertificateFolder
 $CertificateStore = "Cert:\LocalMachine\Root"
 

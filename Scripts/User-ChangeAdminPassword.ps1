@@ -11,6 +11,6 @@ function Get-RandomPassword
 }
 
 $AdminPassword = Get-RandomPassword -Length 32
-Set-LocalUser -Name Administrator -Password (ConvertTo-SecureString -String $AdminPassword -AsPlainText -Force) -AccountNeverExpires -PasswordNeverExpires
+Set-LocalUser -Name Administrator -Password (ConvertTo-SecureString -String $AdminPassword -AsPlainText -Force) -AccountNeverExpires -PasswordNeverExpires $true
 Write-Warning -Message "Password for Administrator: $AdminPassword"
 Read-Host -Prompt "Press any key to continue"

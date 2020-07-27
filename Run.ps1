@@ -6,7 +6,7 @@ param (
 
 #Set computername
 $NewComputerName = Read-Host -Prompt "Current computer name: $env:COMPUTERNAME, New computer name: "
-Rename-Computer -NewName $NewComputerName -Restart:$false -Confirm:false
+Rename-Computer -NewName $NewComputerName -Restart:$false -Confirm:$false -WarningAction SilentlyContinue
 #Scripts
 
 $ScriptsFolder = Join-Path -Path $PSScriptRoot -ChildPath "Scripts"
@@ -28,4 +28,9 @@ if ($UserScripts -eq $true)
 }
 
 Write-Host "Will run scripts: `n$((($ScriptsToRun | Sort-Object -Property Name).Name) -join "`n")"
-
+foreach ($ScriptToRun in $ScriptsToRun)
+{
+    Write-Host "Starting $($ScriptToRun.Name)"
+    Invoke-Command -ComputerName $env:COMPUTERNAME -FilePath $ScriptToRun.FullName
+    Write-Host "Finished $($ScriptToRun.Name)"
+}

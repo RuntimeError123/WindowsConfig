@@ -45,8 +45,9 @@ function SetNetworkConfig
     }
 }
 
+$CurrentComputerName = Get-ItemPropertyValue HKLM:\SYSTEM\ControlSet001\Control\ComputerName\ComputerName -Name ComputerName
 $NetworkConfigFile = Join-Path -Path ($PSScriptRoot | Split-Path -Parent) -ChildPath "Config\Network.csv"
-$NetworkConfig = Import-csv -Path $NetworkConfigFile
-$ApplicableNetworkConfig = $NetworkConfig | Where-Object -Property ComputerName -eq $env:COMPUTERNAME
+$NetworkConfig = Import-Csv -Path $NetworkConfigFile
+$ApplicableNetworkConfig = $NetworkConfig | Where-Object -Property ComputerName -eq $CurrentComputerName
 
 SetNetworkConfig -DHCPEnable ([system.convert]::ToBoolean($ApplicableNetworkConfig.DHCPEnable)) -IPAddress $ApplicableNetworkConfig.IPAddress -PrefixLength $ApplicableNetworkConfig.PrefixLength -DefaultGateway $ApplicableNetworkConfig.DefaultGateway -PrimaryDNS $ApplicableNetworkConfig.PrimaryDNS
