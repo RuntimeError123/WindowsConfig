@@ -1,19 +1,21 @@
 param (
     [array]$Optional,
+    [bool]$SetComputerName = $true,
     [bool]$UserScripts = $true,
     [bool]$Reboot = $true
 )
 
 #Set computername
-$NewComputerName = Read-Host -Prompt "Current computer name: $env:COMPUTERNAME, New computer name: "
-Rename-Computer -NewName $NewComputerName -Restart:$false -Confirm:$false -WarningAction SilentlyContinue
-#Scripts
+if ($SetComputerName -eq $true)
+{
+    $NewComputerName = Read-Host -Prompt "Current computer name: $env:COMPUTERNAME, New computer name"
+    Rename-Computer -NewName $NewComputerName -Restart:$false -Confirm:$false -WarningAction SilentlyContinue
+}
 
+#Scripts
 $ScriptsFolder = Join-Path -Path $PSScriptRoot -ChildPath "Scripts"
 $MandatoryScripts = Get-ChildItem -Path $ScriptsFolder -Filter Mandatory-*.ps1
 $ScriptsToRun = $MandatoryScripts
-
-
 
 if ($Optional)
 {
@@ -31,6 +33,13 @@ Write-Host "Will run scripts: `n$((($ScriptsToRun | Sort-Object -Property Name).
 foreach ($ScriptToRun in $ScriptsToRun)
 {
     Write-Host "Starting $($ScriptToRun.Name)"
-    Invoke-Command -ComputerName $env:COMPUTERNAME -FilePath $ScriptToRun.FullName
+    & $ScriptToRun.FullName
     Write-Host "Finished $($ScriptToRun.Name)"
+}
+
+if ($Reboot -eq $true)
+{
+    Write-Host "Rebooting..."
+    Start-Sleep -Seconds 5
+    Restart-Computer -Confirm:$false
 }

@@ -52,4 +52,7 @@ $NetworkConfigFile = Join-Path -Path ($PSScriptRoot | Split-Path -Parent) -Child
 $NetworkConfig = Import-Csv -Path $NetworkConfigFile
 $ApplicableNetworkConfig = $NetworkConfig | Where-Object -Property ComputerName -eq $CurrentComputerName
 
-SetNetworkConfig -DHCPEnable ([system.convert]::ToBoolean($ApplicableNetworkConfig.DHCPEnable)) -IPAddress $ApplicableNetworkConfig.IPAddress -PrefixLength $ApplicableNetworkConfig.PrefixLength -DefaultGateway $ApplicableNetworkConfig.DefaultGateway -PrimaryDNS $ApplicableNetworkConfig.PrimaryDNS
+if ($ApplicableNetworkConfig)
+{
+    SetNetworkConfig -DHCPEnable ([system.convert]::ToBoolean($ApplicableNetworkConfig.DHCPEnable)) -IPAddress $ApplicableNetworkConfig.IPAddress -PrefixLength $ApplicableNetworkConfig.PrefixLength -DefaultGateway $ApplicableNetworkConfig.DefaultGateway -PrimaryDNS $ApplicableNetworkConfig.PrimaryDNS
+}
