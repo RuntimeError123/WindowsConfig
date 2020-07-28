@@ -27,6 +27,8 @@ function SetNetworkConfig
             #Disable DHCP
             $FirstNetworkAdapter | Set-NetIPInterface -Dhcp Disabled
             #Set static IP 
+            Start-Sleep -Seconds 5
+            $FirstNetworkAdapter | Remove-NetRoute -Confirm:$false -ErrorAction SilentlyContinue
             $FirstNetworkAdapter | Get-NetIPAddress | Remove-NetIPAddress -AddressFamily IPv4 -Confirm:$false -ErrorAction SilentlyContinue
             $FirstNetworkAdapter | New-NetIPAddress -AddressFamily IPv4 -IPAddress $IPAddress -PrefixLength $PrefixLength -DefaultGateway $DefaultGateway | Out-Null
             #Set primary DNS
