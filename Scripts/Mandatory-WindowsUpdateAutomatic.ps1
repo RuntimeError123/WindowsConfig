@@ -58,9 +58,8 @@ $Updates = Start-WUScan -SearchCriteria "Type='Software' AND IsInstalled=0 AND I
 if ($Updates.Count -gt 0)
 {
     WriteLog -Message "Installing $($Updates.Count) updates. This may take a while" -Severity Information
-    Install-WUUpdates -Updates $Updates
+    $RebootRequired = Install-WUUpdates -Updates $Updates
 
-    $RebootRequired = Get-WUIsPendingReboot
     if ($RebootRequired -eq $true)
     {
         WriteLog -Message "A reboot is required" -Severity Warning
