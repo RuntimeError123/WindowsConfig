@@ -12,4 +12,6 @@ function SetTelemetry
 }
 
 $TelemetryLevel = 1 # = Basic
+
+WriteLog -Message "Configuring Telemetry to level $TelemetryLevel" -Severity Information
 SetTelemetry -TelemetryLevel $TelemetryLevel

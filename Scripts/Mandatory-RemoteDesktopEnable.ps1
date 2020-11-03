@@ -9,10 +9,13 @@ function AllowOnlyNLAForRDPConnections
 }
 
 #Enable remote desktop
+WriteLog -Message "Enabling Remote Desktop" -Severity Information
 EnableRemoteDesktop
 
 #Allow only NLA connections
+WriteLog -Message "Allowing RDP only using NLA" -Severity Information
 AllowOnlyNLAForRDPConnections
 
 #Allow through firewall
+WriteLog -Message "Adding firewall rule to allow RDP" -Severity Information
 Enable-NetFirewallRule -DisplayGroup "Remote Desktop"

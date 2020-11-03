@@ -17,21 +17,24 @@ function SetNetworkConfig
     $CurrentDefaultGateway = ($FirstNetworkAdapter | Get-NetRoute -RouteMetric 0 -ErrorAction SilentlyContinue).NextHop
     $CurrentPrimaryDNS = ($FirstNetworkAdapter | Get-DnsClientServerAddress -AddressFamily IPv4).ServerAddresses | Select-Object -First 1
 
-    Write-Verbose -Message "Current: DHCP: $CurrentDHCPEnabled, IPAddress: $CurrentIPAddress, PrefixLength: $CurrentPrefixLength, DefaultGateway: $CurrentDefaultGateway, PrimaryDNS: $CurrentPrimaryDNS"
-    Write-Verbose -Message "New: DHCP: $DHCPEnable, IPAddress: $IPAddress, PrefixLength: $PrefixLength, DefaultGateway: $DefaultGateway, PrimaryDNS: $PrimaryDNS"
+    WriteLog -Message "Current: DHCP: $CurrentDHCPEnabled, IPAddress: $CurrentIPAddress, PrefixLength: $CurrentPrefixLength, DefaultGateway: $CurrentDefaultGateway, PrimaryDNS: $CurrentPrimaryDNS" -Severity Information
+    WriteLog -Message "New: DHCP: $DHCPEnable, IPAddress: $IPAddress, PrefixLength: $PrefixLength, DefaultGateway: $DefaultGateway, PrimaryDNS: $PrimaryDNS" -Severity Information
 
     if ($DHCPEnable -eq $false)
     {
         if ($CurrentDHCPEnabled -eq $true)
         {
             #Disable DHCP
+            WriteLog -Message "Disabling DHCP" -Severity Information
             $FirstNetworkAdapter | Set-NetIPInterface -Dhcp Disabled
             #Set static IP 
+            WriteLog -Message "Configuring static IP" -Severity Information
             Start-Sleep -Seconds 5
             $FirstNetworkAdapter | Remove-NetRoute -Confirm:$false -ErrorAction SilentlyContinue
             $FirstNetworkAdapter | Get-NetIPAddress | Remove-NetIPAddress -AddressFamily IPv4 -Confirm:$false -ErrorAction SilentlyContinue
             $FirstNetworkAdapter | New-NetIPAddress -AddressFamily IPv4 -IPAddress $IPAddress -PrefixLength $PrefixLength -DefaultGateway $DefaultGateway | Out-Null
             #Set primary DNS
+            WriteLog -Message "Configuring primary DNS server" -Severity Information
             $FirstNetworkAdapter | Set-DnsClientServerAddress -ServerAddresses $PrimaryDNS
         }
     }
@@ -39,6 +42,7 @@ function SetNetworkConfig
     {
         if ($CurrentDHCPEnabled -eq $false)
         {
+            WriteLog -Message "Enabling DHCP" -Severity Information
             $FirstNetworkAdapter | Get-NetIPAddress | Remove-NetIPAddress -AddressFamily IPv4 -Confirm:$false -ErrorAction SilentlyContinue
             $FirstNetworkAdapter | Remove-NetRoute -Confirm:$false -ErrorAction SilentlyContinue
             $FirstNetworkAdapter | Set-NetIPInterface -Dhcp Enabled

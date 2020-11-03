@@ -18,13 +18,16 @@ function Set-IniSetting
     }
 }
 
-$SecurityPolicyName = "L3NSecurity"
+$SecurityPolicyName = "Security"
+$MaximumPasswordAge = "-1"
+$PasswordComplexity = "0"
 
+WriteLog -Message "Configuring password policy with MaximumPasswordAge: $MaximumPasswordAge, PasswordComplexity: $PasswordComplexity"
 $TempFile = Join-Path -Path $env:TEMP -ChildPath secpol.ini
 Start-Process C:\Windows\System32\SecEdit.exe -ArgumentList "/export /cfg $TempFile" -Wait
 
-Set-IniSetting -Path $TempFile -Setting MaximumPasswordAge -Value -1 -Overwrite $true
-Set-IniSetting -Path $TempFile -Setting PasswordComplexity -Value 0 -Overwrite $true
+Set-IniSetting -Path $TempFile -Setting MaximumPasswordAge -Value $MaximumPasswordAge -Overwrite $true
+Set-IniSetting -Path $TempFile -Setting PasswordComplexity -Value $PasswordComplexity -Overwrite $true
 
 Start-Process C:\Windows\System32\SecEdit.exe -ArgumentList "/configure /db $env:windir\$SecurityPolicyName.sdb /cfg $TempFile" -Wait
 

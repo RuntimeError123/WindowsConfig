@@ -13,7 +13,9 @@ function SetScheduledInstallTime
 
 $ScheduledInstallTime = 4 #Install updates time
 
+WriteLog -Message "Configuring Windows Update with ScheduledInstallTime: $ScheduledInstallTime" -Severity Information
 SetScheduledInstallTime -ScheduledInstallTime $ScheduledInstallTime
 
 #Restart Windows Update service
+WriteLog -Message "Restarting Windows Update service" -Severity Information
 Get-Service -Name wuauserv | Restart-Service

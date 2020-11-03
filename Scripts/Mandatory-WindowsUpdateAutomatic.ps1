@@ -42,13 +42,35 @@ $AuOptions = 4 #2 = Notify before download, 3 = Automatically download and notif
 $ScheduledInstallDay = 0 #Scheduled install day (0 = every day, 1 = Sunday, 2 = Monday, etc.)
 $ScheduledInstallTime = 3 #Install updates time
 
+WriteLog -Message "Configuring Windows Update with AuOptions: $AuOptions, ScheduledInstallDay: $ScheduledInstallDay, ScheduledInstallTime: $ScheduledInstallTime" -Severity Information
+
 SetAuOptions -AuOptions $AuOptions
 SetScheduledInstallDay -ScheduledInstallDay $ScheduledInstallDay
 SetScheduledInstallTime -ScheduledInstallTime $ScheduledInstallTime
 
 #Restart Windows Update service
+WriteLog -Message "Restarting Windows Update service" -Severity Information
 Get-Service -Name wuauserv | Restart-Service
 
+WriteLog -Message "Scanning for updates" -Severity Information
 Import-Module -Name WindowsUpdateProvider
-$Updates = Start-WUScan -SearchCriteria "IsInstalled=0 AND IsHidden=0 AND IsAssigned=1"
-Install-WUUpdates -Updates $Updates
+$Updates = Start-WUScan -SearchCriteria "Type='Software' AND IsInstalled=0 AND IsHidden=0 AND IsAssigned=1"
+if ($Updates.Count -gt 0)
+{
+    WriteLog -Message "Installing $($Updates.Count) updates. This may take a while" -Severity Information
+    Install-WUUpdates -Updates $Updates
+
+    $RebootRequired = Get-WUIsPendingReboot
+    if ($RebootRequired -eq $true)
+    {
+        WriteLog -Message "A reboot is required" -Severity Warning
+    }
+    else
+    {
+        WriteLog -Message "No reboot is required" -Severity Information
+    }
+}
+else
+{
+    WriteLog -Message "No updates found" -Severity Information    
+}
