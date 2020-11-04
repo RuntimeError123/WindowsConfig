@@ -54,7 +54,7 @@ Get-Service -Name wuauserv | Restart-Service
 
 WriteLog -Message "Scanning for updates" -Severity Information
 Import-Module -Name WindowsUpdateProvider
-$Updates = Start-WUScan -SearchCriteria "Type='Software' AND IsInstalled=0 AND IsHidden=0 AND IsAssigned=1"
+$Updates = Start-WUScan -SearchCriteria "Type='Software' AND IsInstalled=0 AND AutoSelectOnWebsites=1"
 if ($Updates.Count -gt 0)
 {
     WriteLog -Message "Installing $($Updates.Count) updates. This may take a while" -Severity Information
