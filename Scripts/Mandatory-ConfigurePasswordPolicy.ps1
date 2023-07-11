@@ -22,7 +22,7 @@ $SecurityPolicyName = "Security"
 $MaximumPasswordAge = "-1"
 $PasswordComplexity = "0"
 
-WriteLog -Message "Configuring password policy with MaximumPasswordAge: $MaximumPasswordAge, PasswordComplexity: $PasswordComplexity"
+WriteLog -Message "Configuring password policy with MaximumPasswordAge: $MaximumPasswordAge, PasswordComplexity: $PasswordComplexity" -Severity Information
 $TempFile = Join-Path -Path $env:TEMP -ChildPath secpol.ini
 Start-Process C:\Windows\System32\SecEdit.exe -ArgumentList "/export /cfg $TempFile" -Wait
 

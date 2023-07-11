@@ -14,7 +14,7 @@ $SecondAdminUserName = "Lennaert_Admin"
 $SecondAdminFullName = "Lennaert Bosch Admin"
 
 $SecondAdminPassword = Get-RandomPassword -Length 32
-WriteLog -Message "Adding secondary admin user. Name: $SecondAdminUserName, FullName: $SecondAdminFullName"
+WriteLog -Message "Adding secondary admin user. Name: $SecondAdminUserName, FullName: $SecondAdminFullName" -Severity Information
 New-LocalUser -Name $SecondAdminUserName -FullName $SecondAdminFullName -Password (ConvertTo-SecureString -String $SecondAdminPassword -AsPlainText -Force) -AccountNeverExpires -PasswordNeverExpires | Out-Null
 Add-LocalGroupMember -Group Administrators -Member $SecondAdminUserName
 Write-Warning -Message "Password for $SecondAdminUserName : $SecondAdminPassword"

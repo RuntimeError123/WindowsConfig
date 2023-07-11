@@ -1,3 +1,4 @@
 ComputerName,DHCPEnable,IPAddress,PrefixLength,DefaultGateway,PrimaryDNS
 WIN-8C5KSG0JUTS,False,192.168.1.123,24,192.168.1.1,192.168.1.20
 TestW2k19,False,192.168.1.123,24,192.168.1.1,192.168.1.20
+Alpha,False,192.168.1.10,24,192.168.1.1,1.1.1.1

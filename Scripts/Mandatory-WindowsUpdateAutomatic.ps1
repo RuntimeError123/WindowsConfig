@@ -52,24 +52,6 @@ SetScheduledInstallTime -ScheduledInstallTime $ScheduledInstallTime
 WriteLog -Message "Restarting Windows Update service" -Severity Information
 Get-Service -Name wuauserv | Restart-Service
 
-WriteLog -Message "Scanning for updates" -Severity Information
-Import-Module -Name WindowsUpdateProvider
-$Updates = Start-WUScan -SearchCriteria "Type='Software' AND IsInstalled=0 AND AutoSelectOnWebsites=1"
-if ($Updates.Count -gt 0)
-{
-    WriteLog -Message "Installing $($Updates.Count) updates. This may take a while" -Severity Information
-    $RebootRequired = Install-WUUpdates -Updates $Updates
-
-    if ($RebootRequired -eq $true)
-    {
-        WriteLog -Message "A reboot is required" -Severity Warning
-    }
-    else
-    {
-        WriteLog -Message "No reboot is required" -Severity Information
-    }
-}
-else
-{
-    WriteLog -Message "No updates found" -Severity Information    
-}
+WriteLog -Message "Starting Windows Update script. Do not reboot." -Severity Information
+Start-Process cscript.exe -ArgumentList C:\windows\system32\en-US\WUA_SearchDownloadInstall.vbs -Wait
+WriteLog -Message "Finished Windows Update script" -Severity Information

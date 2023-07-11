@@ -71,5 +71,5 @@ else
 {
     WriteLog -Message "Not rebooting, please reboot manually" -Severity Warning    
     WriteLog -CustomMessage "################################################################################"
-    WriteLog -CustomMessage ""
+    WriteLog -CustomMessage " "
 }
